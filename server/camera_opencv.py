@@ -267,67 +267,66 @@ class CVThread(threading.Thread):
         self.pause()
 
 
-    def servoMove(ID, Dir, errorInput, error_X):
-        if ID == 1:
-            errorGenOut = CVThread.kalman_filter_X.kalman(errorInput)
-            CVThread.P_anglePos += 0.15*(errorGenOut*Dir)*CVThread.cameraDiagonalW/CVThread.videoW
+    # def servoMove(ID, Dir, errorInput, error_X):
+    #     if ID == 1:
+    #         errorGenOut = CVThread.kalman_filter_X.kalman(errorInput)
+    #         CVThread.P_anglePos += 0.15*(errorGenOut*Dir)*CVThread.cameraDiagonalW/CVThread.videoW
+    #
+    #         if abs(errorInput) > CVThread.tor:
+    #             CVThread.scGear.moveAngle(ID,CVThread.P_anglePos)
+    #             CVThread.X_lock = 0
+    #         else:
+    #             CVThread.X_lock = 1
+    #     elif ID == 11:
+    #         errorGenOut = CVThread.kalman_filter_Y.kalman(errorInput)
+    #         CVThread.T_anglePos += 0.1*(errorGenOut*Dir)*CVThread.cameraDiagonalH/CVThread.videoH
+    #         if abs(errorInput) > CVThread.tor:
+    #             CVThread.scGear.moveAngle(ID,CVThread.T_anglePos)
+    #             if error_X > 80:
+    #                 print(error_X + ' >100 wiec ruszam w lewo')
+    #                 move.move(100, 'no', 'left', 0.5)
+    #                 CVThread.X_lock = 0
+    #             if error_X < -80:
+    #                 print(error_X + ' <-100 wiec ruszam w prawo')
+    #                 move.move(100, 'no', 'right', 0.5)
+    #                 CVThread.X_lock = 0
+    #             if error_X < 80 and error_X > -80:
+    #                 move.motorStop()
+    #                 CVThread.X_lock = 1
+    #
+    #             CVThread.Y_lock = 0
+    #         else:
+    #             CVThread.Y_lock = 1
+    #     else:
+    #         print('No servoPort %d assigned.'%ID)
 
-            if abs(errorInput) > CVThread.tor:
-                CVThread.scGear.moveAngle(ID,CVThread.P_anglePos)
-                CVThread.X_lock = 0
-            else:
-                CVThread.X_lock = 1
-        elif ID == 11:
-            errorGenOut = CVThread.kalman_filter_Y.kalman(errorInput)
-            CVThread.T_anglePos += 0.1*(errorGenOut*Dir)*CVThread.cameraDiagonalH/CVThread.videoH
-            if abs(errorInput) > CVThread.tor:
-                CVThread.scGear.moveAngle(ID,CVThread.T_anglePos)
-                if error_X > 80:
-                    print(error_X + ' >100 wiec ruszam w lewo')
-                    move.move(100, 'no', 'left', 0.5)
-                    CVThread.X_lock = 0
-                if error_X < -80:
-                    print(error_X + ' <-100 wiec ruszam w prawo')
-                    move.move(100, 'no', 'right', 0.5)
-                    CVThread.X_lock = 0
-                if error_X < 80 and error_X > -80:
-                    move.motorStop()
-                    CVThread.X_lock = 1
-
-                CVThread.Y_lock = 0
-            else:
-                CVThread.Y_lock = 1
-        else:
-            print('No servoPort %d assigned.'%ID)
-
-    def moveRandomly(self):
-        print("poruszam sie żeby znalezc nowy cel")
-        if 0.7 > ultra.checkdist():
-            print("obrót")
-            move.move(100, 'backward', 'no', 0.5)
-            time.sleep(1)
-            move.motorStop()
-            move.move(100, 'no', 'left', 0.5)
-            move.motorStop()
-            self.findColorDetection = 1
-        else:
-            print("do przodu")
-            move.move(100, 'forward', 'no', 0.5)
-            move.motorStop()
-        time.sleep(2)
+    # def moveRandomly(self):
+    #     print("poruszam sie żeby znalezc nowy cel")
+    #     if 0.7 > ultra.checkdist():
+    #         print("obrót")
+    #         move.move(100, 'backward', 'no', 0.5)
+    #         time.sleep(1)
+    #         move.motorStop()
+    #         move.move(100, 'no', 'left', 0.5)
+    #         move.motorStop()
+    #         self.findColorDetection = 1
+    #     else:
+    #         print("do przodu")
+    #         move.move(100, 'forward', 'no', 0.5)
+    #         move.motorStop()
+    #     time.sleep(2)
 
 
 
     def findColor(self, frame_image):
         hsv = cv2.cvtColor(frame_image, cv2.COLOR_BGR2HSV)
-        mask = cv2.inRange(hsv, colorLower, colorUpper)#1
+        mask = cv2.inRange(hsv, colorLower, colorUpper)  # 1
         mask = cv2.erode(mask, None, iterations=2)
         mask = cv2.dilate(mask, None, iterations=2)
         cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
-            cv2.CHAIN_APPROX_SIMPLE)[-2]
+                                cv2.CHAIN_APPROX_SIMPLE)[-2]
         center = None
         if len(cnts) > 0:
-            print("szukanie celu")
             self.findColorDetection = 1
             c = max(cnts, key=cv2.contourArea)
             ((self.box_x, self.box_y), self.radius) = cv2.minEnclosingCircle(c)
@@ -338,28 +337,61 @@ class CVThread(threading.Thread):
             error_Y = 240 - Y
             error_X = 320 - X
             # CVThread.servoMove(CVThread.P_servo, CVThread.P_direction, error_X)
-            CVThread.servoMove(CVThread.T_servo, CVThread.T_direction, error_Y, error_X)
+            # linijka ponizej byla aktywna
+            # CVThread.servoMove(CVThread.T_servo, CVThread.T_direction, error_Y, error_X)
+
+            if CVThread.T_servo == 11:
+                errorGenOut = CVThread.kalman_filter_Y.kalman(error_Y)
+                CVThread.T_anglePos += 0.1 * (
+                            errorGenOut * CVThread.T_direction) * CVThread.cameraDiagonalH / CVThread.videoH
+                if abs(error_Y) > CVThread.tor or error_X > 80:
+                    CVThread.scGear.moveAngle(CVThread.T_servo, CVThread.T_anglePos)
+                    move.move(100, 'no', 'left', 0.5)
+                    CVThread.Y_lock = 0
+                elif abs(error_Y) > CVThread.tor or error_X < -80:
+                    CVThread.scGear.moveAngle(CVThread.T_servo, CVThread.T_anglePos)
+                    move.move(100, 'no', 'right', 0.5)
+                    CVThread.Y_lock = 0
+                else:
+                    move.motorStop()
+                    CVThread.Y_lock = 1
+            else:
+                print('No servoPort %d assigned.' % CVThread.T_servo)
+
             # CVThread.motorMove( error_X)
 
             # if CVThread.X_lock == 1 and CVThread.Y_lock == 1:
-            if CVThread.X_lock == 1 and CVThread.Y_lock == 1:
-                led.setColor(255,78,0)
-                # switch.switch(1,1)
-                # switch.switch(2,1)
-                # switch.switch(3,1)
-            else:
-                led.setColor(0,78,255)
-                # switch.switch(1,0)
-                # switch.switch(2,0)
-                # switch.switch(3,0)
+            # if CVThread.X_lock == 1 and CVThread.Y_lock == 1:
+            #     led.setColor(255,78,0)
+            #     # switch.switch(1,1)
+            #     # switch.switch(2,1)
+            #     # switch.switch(3,1)
+            # else:
+            #     led.setColor(0,78,255)
+            #     # switch.switch(1,0)
+            #     # switch.switch(2,0)
+            #     # switch.switch(3,0)
         else:
-            self.findColorDetection = 0
-            self.moveRandomly()
+            # self.findColorDetection = 0
+            # self.moveRandomly()
+            print("poruszam sie żeby znalezc nowy cel")
+            if 0.1 > ultra.checkdist():
+                print("obrót")
+                move.move(100, 'backward', 'no', 0.5)
+                time.sleep(1)
+                move.motorStop()
+                move.move(100, 'no', 'left', 0.5)
+                move.motorStop()
+            else:
+                print("do przodu")
+                move.move(100, 'forward', 'no', 0.5)
+                move.motorStop()
+            time.sleep(2)
         self.pause()
 
 
-    def pause(self):
-        self.__flag.clear()
+def pause(self):
+    self.__flag.clear()
 
     def resume(self):
         self.__flag.set()
