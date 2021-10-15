@@ -344,6 +344,7 @@ class CVThread(threading.Thread):
                 errorGenOut = CVThread.kalman_filter_Y.kalman(error_Y)
                 CVThread.T_anglePos += 0.1 * (
                             errorGenOut * CVThread.T_direction) * CVThread.cameraDiagonalH / CVThread.videoH
+                print("AnglePos is " + CVThread.T_anglePos)
                 if abs(error_Y) > CVThread.tor or error_X > 80:
                     CVThread.scGear.moveAngle(CVThread.T_servo, CVThread.T_anglePos)
                     move.move(100, 'no', 'left', 0.5)
