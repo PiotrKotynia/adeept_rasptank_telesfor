@@ -342,6 +342,8 @@ class CVThread(threading.Thread):
         cnts = cv2.findContours(mask.copy(), cv2.RETR_EXTERNAL,
                                 cv2.CHAIN_APPROX_SIMPLE)[-2]
         center = None
+        print("sprawdzam czy jest obiekt")
+        print(cnts)
         if len(cnts) > 0:
             self.findColorDetection = 1
             c = max(cnts, key=cv2.contourArea)
@@ -393,6 +395,7 @@ class CVThread(threading.Thread):
             # self.moveRandomly()
             print("poruszam sie żeby znalezc nowy cel")
             if 0.1 > ultra.checkdist():
+                print(ultra.checkdist())
                 print("obrót")
                 # move.move(100, 'backward', 'no', 0.5)
                 time.sleep(1)
