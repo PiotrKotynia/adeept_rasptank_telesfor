@@ -363,11 +363,11 @@ class CVThread(threading.Thread):
                 print("AnglePos is " + CVThread.T_anglePos)
                 if abs(error_Y) > CVThread.tor or error_X > 80:
                     CVThread.scGear.moveAngle(CVThread.T_servo, CVThread.T_anglePos)
-                    move.move(100, 'no', 'left', 0.5)
+                    # move.move(100, 'no', 'left', 0.5)
                     CVThread.Y_lock = 0
                 elif abs(error_Y) > CVThread.tor or error_X < -80:
                     CVThread.scGear.moveAngle(CVThread.T_servo, CVThread.T_anglePos)
-                    move.move(100, 'no', 'right', 0.5)
+                    # move.move(100, 'no', 'right', 0.5)
                     CVThread.Y_lock = 0
                 else:
                     move.motorStop()
@@ -394,14 +394,14 @@ class CVThread(threading.Thread):
             print("poruszam sie żeby znalezc nowy cel")
             if 0.1 > ultra.checkdist():
                 print("obrót")
-                move.move(100, 'backward', 'no', 0.5)
+                # move.move(100, 'backward', 'no', 0.5)
                 time.sleep(1)
                 move.motorStop()
-                move.move(100, 'no', 'left', 0.5)
+                # move.move(100, 'no', 'left', 0.5)
                 move.motorStop()
             else:
                 print("do przodu")
-                move.move(100, 'forward', 'no', 0.5)
+                # move.move(100, 'forward', 'no', 0.5)
                 move.motorStop()
             time.sleep(2)
         self.pause()
