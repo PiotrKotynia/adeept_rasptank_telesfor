@@ -184,7 +184,7 @@ class Functions(threading.Thread):
 			move.move(100, 'no', 'left', 0.5)
 		else:
 			move.move(100, 'forward', 'no', 0.5)
-		time.sleep(2)
+		time.sleep(0.1)
 		if self.functionMode == 'none':
 			move.move(80, 'no', 'no', 0.5)
 

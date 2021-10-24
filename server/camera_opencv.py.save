@@ -285,25 +285,24 @@ class CVThread(threading.Thread):
             if abs(errorInput) > CVThread.tor:
                 CVThread.scGear.moveAngle(ID,CVThread.T_anglePos)
                 print(CVThread.T_anglePos)
-                
                 if error_X < 80 and error_X > -80:
                     print(error_X, 'wycentrowane - stop')
                     move.motorStop()
-                    #time.sleep(10)
-                    #move.move(100, 'no', 'right', 0.5)
-                    #time.sleep(1)
-                    #move.motorStop()
+                    time.sleep(10)
+                    move.move(100, 'no', 'right', 0.5)
+                    time.sleep(1)
+                    move.motorStop()
                 if error_X > 80:
-                    print(error_X, ' >80 wiec ruszam w prawo')
-                    #move.move(100, 'no', 'right', 0.5)
-                    #time.sleep(0.5)
-                    #move.motorStop()
+                    print(error_X, ' >80 wiec ruszam w lewo')
+                    move.move(100, 'no', 'left', 0.5)
+          
+                    move.motorStop()
                     CVThread.X_lock = 0
                 if error_X < -80:
-                    print(error_X, ' <-80 ruszam w lewo')
-                    #move.move(100, 'no', 'left', 0.5)
-                    #time.sleep(0.5)
-                    #move.motorStop()
+                    print(error_X, ' <-80 ruszam w prawo')
+                    move.move(100, 'no', 'right', 0.5)
+                    time.sleep(0.5)
+                    move.motorStop()
                     CVThread.X_lock = 0
                 else:
                     CVThread.X_lock = 1
@@ -343,7 +342,6 @@ class CVThread(threading.Thread):
             cv2.CHAIN_APPROX_SIMPLE)[-2]
         center = None
         if len(cnts) > 0:
-            print('target detected')
             self.findColorDetection = 1
             c = max(cnts, key=cv2.contourArea)
             ((self.box_x, self.box_y), self.radius) = cv2.minEnclosingCircle(c)
@@ -368,11 +366,11 @@ class CVThread(threading.Thread):
                 # switch.switch(2,0)
                 # switch.switch(3,0)
         else:
-            #print('no target')
-            #time.sleep(5)
+            print('odpoczynek 5 sek')
+            time.sleep(5)
             self.findColorDetection = 0
-            move.motorStop()
-            #self.moveRandomly()
+            #move.motorStop()
+            self.moveRandomly()
         self.pause()
 
 

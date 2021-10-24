@@ -22,11 +22,11 @@ Motor_B_Pin2  = 18
 Dir_forward   = 1
 Dir_backward  = 0
 
-left_forward  = 0
-left_backward = 1
+left_forward  = 1
+left_backward = 0
 
-right_forward = 0
-right_backward= 1
+right_forward = 1
+right_backward= 0
 
 pwn_A = 0
 pwm_B = 0
@@ -106,8 +106,8 @@ def move(speed, direction, turn, radius=0.6):   # 0 < radius <= 1
 			motor_left(1, left_forward, speed)
 			motor_right(0, right_backward, int(speed*radius))
 		else:
-			motor_left(1, left_forward, speed)
-			motor_right(1, right_forward, speed)
+			motor_left(1, left_backward, speed)
+			motor_right(1, right_backward, speed)
 	elif direction == 'backward':
 		if turn == 'right':
 			motor_left(0, left_forward, int(speed*radius))
@@ -116,8 +116,8 @@ def move(speed, direction, turn, radius=0.6):   # 0 < radius <= 1
 			motor_left(1, left_backward, speed)
 			motor_right(0, right_forward, int(speed*radius))
 		else:
-			motor_left(1, left_backward, speed)
-			motor_right(1, right_backward, speed)
+			motor_left(1, left_forward, speed)
+			motor_right(1, right_forward, speed)
 	elif direction == 'no':
 		if turn == 'right':
 			motor_left(1, left_backward, speed)
