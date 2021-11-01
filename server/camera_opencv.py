@@ -375,23 +375,24 @@ class CVThread(threading.Thread):
                 CVThread.Y_lock = 1
         else:
             self.findColorDetection = 0
+            move.motorStop()
             # self.moveRandomly()
-            print("poruszam sie żeby znalezc nowy cel")
-            if 0.1 > ultra.checkdist():
-                print(ultra.checkdist())
-                move.move(100, 'backward', 'no', 0.5)
-                time.sleep(0.5)
-                move.motorStop()
-            elif 0.3 > ultra.checkdist():
-                move.move(100, 'no', 'left', 0.5)
-                time.sleep(0.5)
-                move.motorStop()
-            else:
-                print("do przodu")
-                move.move(100, 'forward', 'no', 0.5)
-                time.sleep(0.5)
-                move.motorStop()
-            time.sleep(0.1)
+            # print("poruszam sie żeby znalezc nowy cel")
+            # if 0.1 > ultra.checkdist():
+            #     print(ultra.checkdist())
+            #     move.move(100, 'backward', 'no', 0.5)
+            #     time.sleep(0.5)
+            #     move.motorStop()
+            # elif 0.3 > ultra.checkdist():
+            #     move.move(100, 'no', 'left', 0.5)
+            #     time.sleep(0.5)
+            #     move.motorStop()
+            # else:
+            #     print("do przodu")
+            #     move.move(100, 'forward', 'no', 0.5)
+            #     time.sleep(0.5)
+            #     move.motorStop()
+            # time.sleep(0.1)
         self.pause()
 
 
