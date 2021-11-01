@@ -365,14 +365,14 @@ class CVThread(threading.Thread):
             if abs(error_Y) > CVThread.tor or error_X > 80:
                 CVThread.scGear.moveAngle(CVThread.T_servo, CVThread.T_anglePos)
                 move.move(100, 'no', 'left', 0.5)
-                CVThread.Y_lock = 0
+                # CVThread.Y_lock = 0
             elif abs(error_Y) > CVThread.tor or error_X < -80:
                 CVThread.scGear.moveAngle(CVThread.T_servo, CVThread.T_anglePos)
                 move.move(100, 'no', 'right', 0.5)
-                CVThread.Y_lock = 0
+                # CVThread.Y_lock = 0
             else:
                 move.motorStop()
-                CVThread.Y_lock = 1
+                # CVThread.Y_lock = 1
         else:
             self.findColorDetection = 0
             move.motorStop()
