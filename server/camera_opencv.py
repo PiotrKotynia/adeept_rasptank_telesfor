@@ -343,7 +343,6 @@ class CVThread(threading.Thread):
                                 cv2.CHAIN_APPROX_SIMPLE)[-2]
         center = None
         print("sprawdzam czy jest obiekt")
-        print(cnts)
         if len(cnts) > 0:
             self.findColorDetection = 1
             c = max(cnts, key=cv2.contourArea)
